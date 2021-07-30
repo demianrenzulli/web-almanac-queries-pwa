@@ -17,8 +17,11 @@ try {
       var workboxItems = workboxPackageMethods[i].toString().trim().split(',');
 
       for(var j = 0; j < workboxItems.length; j++) {
-        if(workboxItems[j].indexOf(':') > -1) {
-          workboxPackages.push(workboxItems[j].trim());
+        var workboxItem = workboxItems[j];
+        var firstColonIndex = workboxItem.indexOf(':');
+        if(firstColonIndex > -1) {
+          var workboxPackage = workboxItem.trim().substring(0, workboxItem.indexOf(':', firstColonIndex + 1));
+          workboxPackages.push(workboxPackage);
         }
       }
   }
@@ -29,6 +32,7 @@ try {
 }
 ''';
 SELECT
+  _TABLE_SUFFIX AS client,
   url,
   workbox_packages,
 FROM

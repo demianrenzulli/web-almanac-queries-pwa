@@ -1,6 +1,6 @@
 #standardSQL
-#Workbox methods by url (detail)
-CREATE TEMPORARY FUNCTION getWorkboxMethods(workboxInfo STRING)
+#Workbox packages by url (detail)
+CREATE TEMPORARY FUNCTION getWorkboxPackages(workboxInfo STRING)
 RETURNS ARRAY<STRING> LANGUAGE js AS '''
 try {
  
@@ -10,33 +10,36 @@ try {
     workboxPackageMethods = [workboxPackageMethods];
   }
 
-  var workboxMethods = [];
+  var workboxPackages = [];
 
   /* Replacing spaces and commas */
   for (var i = 0; i < workboxPackageMethods.length; i++) {
       var workboxItems = workboxPackageMethods[i].toString().trim().split(',');
 
       for(var j = 0; j < workboxItems.length; j++) {
-        if(workboxItems[j].indexOf(':') == -1) {
-          workboxMethods.push(workboxItems[j].trim());
+        var workboxItem = workboxItems[j];
+        var firstColonIndex = workboxItem.indexOf(':');
+        if(firstColonIndex > -1) {
+          var workboxPackage = workboxItem.trim().substring(0, workboxItem.indexOf(':', firstColonIndex + 1));
+          workboxPackages.push(workboxPackage);
         }
       }
   }
 
-  return Array.from(new Set(workboxMethods));
+  return Array.from(new Set(workboxPackages));
 } catch (e) {
   return [e];
 }
 ''';
 SELECT
   _TABLE_SUFFIX AS client,
-  url,
-  workbox_methods,
+  workbox_package,
+  COUNT(0) AS freq
 FROM
   `httparchive.sample_data.pages_*`,
   --`httparchive.pages.2021_07_01_*`,
-  UNNEST(getWorkboxMethods(JSON_EXTRACT(payload, '$._pwa.workboxInfo'))) AS workbox_methods
+  UNNEST(getWorkboxPackages(JSON_EXTRACT(payload, '$._pwa.workboxInfo'))) AS workbox_package
 WHERE
   JSON_EXTRACT(payload, '$._pwa') != "[]" AND
   JSON_EXTRACT(payload, '$._pwa.workboxInfo') != "[]"
-ORDER BY url ASC
+GROUP BY workbox_package, client

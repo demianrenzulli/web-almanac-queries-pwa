@@ -30,13 +30,13 @@ try {
 ''';
 SELECT
   _TABLE_SUFFIX AS client,
-  url,
-  workbox_methods,
+  workbox_method,
+  COUNT(0) AS freq
 FROM
   `httparchive.sample_data.pages_*`,
   --`httparchive.pages.2021_07_01_*`,
-  UNNEST(getWorkboxMethods(JSON_EXTRACT(payload, '$._pwa.workboxInfo'))) AS workbox_methods
+  UNNEST(getWorkboxMethods(JSON_EXTRACT(payload, '$._pwa.workboxInfo'))) AS workbox_method
 WHERE
   JSON_EXTRACT(payload, '$._pwa') != "[]" AND
   JSON_EXTRACT(payload, '$._pwa.workboxInfo') != "[]"
-ORDER BY url ASC
+GROUP BY workbox_method, client
