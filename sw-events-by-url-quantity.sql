@@ -4,15 +4,19 @@ CREATE TEMPORARY FUNCTION getSWEvents(swEventListenersInfo STRING)
 RETURNS ARRAY<STRING> LANGUAGE js AS '''
 try {
   var swEvents = Object.values(JSON.parse(swEventListenersInfo));
-  if (typeof swEvents == 'string') {
-    return [swEvents];
+
+  if (typeof swEvents != 'string') {
+    swEvents = swEvents.toString();
   }
-  return swEvents;
+
+  swEvents = swEvents.trim().split(',');
+  return Array.from(new Set(swEvents));
 } catch (e) {
   return [e];
 }
 ''';
 SELECT
+  _TABLE_SUFFIX AS client,
   url,
   COUNTIF(LOWER(sw_events) LIKE '%install%') AS install,
   COUNTIF(LOWER(sw_events) LIKE '%activate%') AS activate,
@@ -34,5 +38,5 @@ FROM
 WHERE
   JSON_EXTRACT(payload, '$._pwa') != "[]" AND
   JSON_EXTRACT(payload, '$._pwa.swEventListenersInfo') != "[]"
-GROUP BY url
+GROUP BY url, client
 ORDER BY url ASC
