@@ -42,6 +42,28 @@ SELECT
   COUNTIF(LOWER(libraries) LIKE '%analytics-helper%') AS analytics_helper,
   COUNTIF(LOWER(libraries) LIKE '%recaptcha%') AS recaptcha,
   COUNTIF(LOWER(libraries) LIKE '%pwabuilder%') AS pwabuilder,
+  COUNTIF(LOWER(libraries) LIKE '%importscript%' AND
+    LOWER(libraries) NOT LIKE '%workbox%' AND
+    LOWER(libraries) NOT LIKE '%sw-toolbox%' AND
+    LOWER(libraries) NOT LIKE '%firebase%' AND
+    LOWER(libraries) NOT LIKE '%onesignalsdk%' AND
+    LOWER(libraries) NOT LIKE '%najva%' AND
+    LOWER(libraries) NOT LIKE '%upush%' AND
+    LOWER(libraries) NOT LIKE '%cache-polyfill%' AND
+    LOWER(libraries) NOT LIKE '%analytics-helper%'AND 
+    LOWER(libraries) NOT LIKE '%recaptcha%' AND
+    LOWER(libraries) NOT LIKE '%pwabuilder%') AS importscript_nolib,
+  COUNTIF(LOWER(libraries) NOT LIKE '%importscript%' AND
+    LOWER(libraries) NOT LIKE '%workbox%' AND
+    LOWER(libraries) NOT LIKE '%sw-toolbox%' AND
+    LOWER(libraries) NOT LIKE '%firebase%' AND
+    LOWER(libraries) NOT LIKE '%onesignalsdk%' AND
+    LOWER(libraries) NOT LIKE '%najva%' AND
+    LOWER(libraries) NOT LIKE '%upush%' AND
+    LOWER(libraries) NOT LIKE '%cache-polyfill.js%' AND
+    LOWER(libraries) NOT LIKE '%analytics-helper.js%' AND
+    LOWER(libraries) NOT LIKE '%recaptcha%' AND
+    LOWER(libraries) NOT LIKE '%pwabuilder%') AS none_of_the_above
 FROM
  (
   SELECT

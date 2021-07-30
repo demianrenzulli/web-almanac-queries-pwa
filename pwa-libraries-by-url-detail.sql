@@ -31,6 +31,7 @@ try {
 ''';
 
 SELECT
+  _TABLE_SUFFIX AS client,
   url,
   libraries,
 FROM
