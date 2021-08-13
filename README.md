@@ -18,6 +18,12 @@
 -   **sw-properties-by-url-detail.sql:** Lists URLs with their corresponding service worker properties.
 -   **sw-properties-by-url-quantity.sql:** Lists URLs with the number of times each service worker event is used.
 
+#### SW install events
+
+-   **sw-install-events-frequency.sql:** Number of URLs that use each install event.
+-   **sw-sw-install-events-by-url-detail.sql:** Lists URLs with their corresponding install events.
+-   **sw-sw-install-events-by-url-quantity.sql:** Lists URLs with the number of times each install event is used.
+
  #### Workbox 
  
  ##### Workbox methods
