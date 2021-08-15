@@ -24,6 +24,12 @@
 -   **sw-methods-by-url-detail.sql:** Lists URLs with their corresponding service worker methods.
 -   **sw-methods-by-url-quantity.sql:** Lists URLs with the number of times each service worker method is used.
 
+#### SW objects
+
+-   **sw-objects-frequency.sql:** Number of URLs that use each SW object.
+-   **sw-objects-by-url-detail.sql:** Lists URLs with their corresponding service worker object.
+-   **sw-objects-by-url-quantity.sql:** Lists URLs with the number of times each service worker method is used.
+
 #### SW install events
 
 -   **sw-install-events-frequency.sql:** Number of URLs that use each install event.
