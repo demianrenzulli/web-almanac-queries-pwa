@@ -16,12 +16,26 @@ try {
     if(field == '[]' || field == '') {
         return [];
     }
-    var parsedField = Object.values(JSON.parse(field));
-    if (typeof parsedField != 'string') {
-        parsedField = parsedField.toString();
+
+    var jsonObject = JSON.parse(field);
+
+    /* Remove entries with libraries that cause false positives (e.g. Youtube) */
+    var objectKeys = Object.keys(jsonObject);
+    if (typeof objectKeys != 'string') {
+        objectKeys = objectKeys.toString();
     }
-    parsedField = parsedField.trim().split(',');
-    return parsedField;
+    objectKeys = objectKeys.trim().split(',');
+    for(var i = 0; i < objectKeys.length; i++) {
+        if(objectKeys[i].toLowerCase().includes('youtube')) {
+            delete jsonObject[objectKeys[i]];
+        }
+    }
+
+    var objectValues = Object.values(jsonObject);
+    if (typeof objectValues != 'string') {
+        objectValues = objectValues.toString();
+    }
+    return objectValues.trim().split(',');
 } catch (e) {
   return [e];
 }
@@ -52,7 +66,8 @@ JOIN
 USING (_TABLE_SUFFIX)
 WHERE
   JSON_EXTRACT(payload, '$._pwa') != "[]" AND
-  (JSON_EXTRACT(payload, '$._pwa.windowEventListenersInfo') != "[]" OR JSON_EXTRACT(payload, '$._pwa.windowPropertiesInfo') != "[]")
+  (JSON_EXTRACT(payload, '$._pwa.windowEventListenersInfo') != "[]" OR JSON_EXTRACT(payload, '$._pwa.windowPropertiesInfo') != "[]") AND 
+  install_event != '' AND install_event != '[]'
 GROUP BY
   client,
   total,
